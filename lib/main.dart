@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Taskly",
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: const Color.fromRGBO(21, 21, 21, 1.0),
       ),
       home: HomePage(),
     );
