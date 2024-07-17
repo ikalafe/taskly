@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       title: "Taskly",
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromRGBO(21, 21, 21, 1.0),
+        // primarySwatch: Colors.red,
       ),
       home: HomePage(),
     );

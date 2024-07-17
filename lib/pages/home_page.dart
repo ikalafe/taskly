@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         backgroundColor: const Color.fromRGBO(10, 182, 171, 1.0),
-        toolbarHeight: _deviceHeight * 0.13,
+        toolbarHeight: _deviceHeight * 0.08,
         title: const Text(
           "Taskly",
           style: TextStyle(
@@ -45,6 +45,63 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      body: _tasksList(),
+    );
+  }
+
+  Widget _tasksList() {
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        vertical: _deviceHeight * 0.05,
+        horizontal: 26,
+      ),
+      children: [
+        const Text(
+          "Tasks:",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 32,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: _deviceHeight * 0.01),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(32, 31, 31, 1.0),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color:
+                    const Color.fromARGB(255, 255, 255, 255).withOpacity(0.2),
+                spreadRadius: 0.2,
+                blurRadius: 3,
+                offset: const Offset(0.2, 0.5),
+              ),
+            ],
+          ),
+          child: ListTile(
+            title: const Text(
+              "Do Laundry!",
+              style: TextStyle(
+                decoration: TextDecoration.lineThrough,
+                color: Color.fromRGBO(245, 245, 245, 1.0),
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            subtitle: Text(
+              DateTime.now().toString(),
+              style: const TextStyle(
+                color: Color.fromRGBO(122, 119, 119, 1.0),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            trailing: const Icon(
+              Icons.check_circle_outline,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
