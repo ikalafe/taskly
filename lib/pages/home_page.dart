@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      floatingActionButton: _addTaskButton(),
       body: _tasksList(),
     );
   }
@@ -102,6 +103,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _addTaskButton() {
+    return FloatingActionButton(
+      onPressed: () {},
+      backgroundColor: const Color.fromRGBO(10, 182, 171, 1.0),
+      child: const Icon(
+        Icons.add,
+        color: Colors.black,
+      ),
     );
   }
 }
