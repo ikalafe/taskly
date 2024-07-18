@@ -10,6 +10,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late double _deviceHeight, _deviceWidth;
+
+  String? _newTaskContent;
+
   _HomePageState();
   @override
   Widget build(BuildContext context) {
@@ -108,12 +111,50 @@ class _HomePageState extends State<HomePage> {
 
   Widget _addTaskButton() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: _displayTaskPopup,
       backgroundColor: const Color.fromRGBO(10, 182, 171, 1.0),
       child: const Icon(
         Icons.add,
         color: Colors.black,
       ),
+    );
+  }
+
+  void _displayTaskPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 28, 28, 28),
+          title: const Text(
+            "Add New Task!",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          content: TextField(
+            onSubmitted: (_value) {},
+            onChanged: (_value) {
+              setState(() {
+                _newTaskContent = _value;
+              });
+            },
+            cursorColor: Colors.white,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromRGBO(10, 182, 171, 1.0),
+                  width: 2.0,
+                ),
+              ),
+              labelText: "Title",
+              labelStyle: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+      },
     );
   }
 }
