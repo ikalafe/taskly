@@ -175,10 +175,22 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           content: TextField(
-            onSubmitted: (_value) {},
-            onChanged: (_value) {
+            onSubmitted: (_) {
+              if (_newTaskContent != null) {
+                var task = Task(
+                    content: _newTaskContent!,
+                    timestamp: DateTime.now(),
+                    done: false);
+                _box!.add(task.toMap());
+                setState(() {
+                  _newTaskContent = null;
+                  Navigator.pop(context);
+                });
+              }
+            },
+            onChanged: (value) {
               setState(() {
-                _newTaskContent = _value;
+                _newTaskContent = value;
               });
             },
             cursorColor: Colors.white,
