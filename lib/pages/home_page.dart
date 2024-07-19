@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:taskly/models/task.dart';
 
 class HomePage extends StatefulWidget {
   HomePage();
@@ -14,6 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   String? _newTaskContent;
 
+  Box? _box;
   _HomePageState();
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,7 @@ class _HomePageState extends State<HomePage> {
       future: Hive.openBox('tasks'),
       builder: (BuildContext _context, AsyncSnapshot _snapshot) {
         if (_snapshot.connectionState == ConnectionState.done) {
+          _box = _snapshot.data;
           return _tasksList();
         } else {
           return SizedBox(
@@ -91,21 +94,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _tasksList() {
-    return ListView(
-      padding: EdgeInsets.symmetric(
-        vertical: _deviceHeight * 0.05,
-        horizontal: 26,
-      ),
-      children: [
-        const Text(
-          "Tasks:",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
+    List tasks = _box!.values.toList();
+    return ListView.builder(
+      itemCount: tasks.length,
+      itemBuilder: (BuildContext _context, int _index) {
+        var task = Task.fromMap(tasks[_index]);
+        return Container(
+          margin: EdgeInsets.only(
+            top: _deviceHeight * 0.03,
+            left: _deviceHeight * 0.01,
+            right: _deviceHeight * 0.01,
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: _deviceHeight * 0.01),
           decoration: BoxDecoration(
             color: const Color.fromRGBO(32, 31, 31, 1.0),
             borderRadius: BorderRadius.circular(10),
@@ -120,29 +119,35 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           child: ListTile(
-            title: const Text(
-              "Do Laundry!",
+            title: Text(
+              task.content,
               style: TextStyle(
-                decoration: TextDecoration.lineThrough,
-                color: Color.fromRGBO(245, 245, 245, 1.0),
+                decoration: task.done ? TextDecoration.lineThrough : null,
+                decorationColor: const Color.fromRGBO(122, 119, 119, 1.0),
+                decorationThickness: 2,
+                color: task.done
+                    ? const Color.fromRGBO(122, 119, 119, 1.0)
+                    : const Color.fromRGBO(245, 245, 245, 1.0),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
             subtitle: Text(
-              DateTime.now().toString(),
+              task.timestamp.toString(),
               style: const TextStyle(
                 color: Color.fromRGBO(122, 119, 119, 1.0),
                 fontWeight: FontWeight.w600,
               ),
             ),
-            trailing: const Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,
+            trailing: Icon(
+              task.done ? Icons.check_circle_outline : Icons.circle_outlined,
+              color: task.done
+                  ? const Color.fromRGBO(122, 119, 119, 1.0)
+                  : Colors.white,
             ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 
