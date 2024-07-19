@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
   HomePage();
@@ -49,7 +50,43 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: _addTaskButton(),
-      body: _tasksList(),
+      body: _tasksView(),
+    );
+  }
+
+  Widget _tasksView() {
+    return FutureBuilder(
+      future: Hive.openBox('tasks'),
+      builder: (BuildContext _context, AsyncSnapshot _snapshot) {
+        if (_snapshot.connectionState == ConnectionState.done) {
+          return _tasksList();
+        } else {
+          return SizedBox(
+            height: _deviceHeight * 1,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Please Wait',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: _deviceHeight * 0.03,
+                  ),
+                  const CircularProgressIndicator(
+                    color: Color.fromRGBO(10, 182, 171, 1.0),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 
