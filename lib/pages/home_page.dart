@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:taskly/models/task.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage();
+  const HomePage({super.key});
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late double _deviceHeight, _deviceWidth;
+  late double _deviceHeight;
 
   String? _newTaskContent;
 
@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
-    _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -59,9 +58,9 @@ class _HomePageState extends State<HomePage> {
   Widget _tasksView() {
     return FutureBuilder(
       future: Hive.openBox('tasks'),
-      builder: (BuildContext _context, AsyncSnapshot _snapshot) {
-        if (_snapshot.connectionState == ConnectionState.done) {
-          _box = _snapshot.data;
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          _box = snapshot.data;
           return _tasksList();
         } else {
           return SizedBox(
@@ -97,8 +96,8 @@ class _HomePageState extends State<HomePage> {
     List tasks = _box!.values.toList();
     return ListView.builder(
       itemCount: tasks.length,
-      itemBuilder: (BuildContext _context, int _index) {
-        var task = Task.fromMap(tasks[_index]);
+      itemBuilder: (BuildContext context, int index) {
+        var task = Task.fromMap(tasks[index]);
         return Container(
           margin: EdgeInsets.only(
             top: _deviceHeight * 0.03,
@@ -145,6 +144,18 @@ class _HomePageState extends State<HomePage> {
                   ? const Color.fromRGBO(122, 119, 119, 1.0)
                   : Colors.white,
             ),
+            onTap: () {
+              task.done = !task.done;
+              _box!.putAt(
+                index,
+                task.toMap(),
+              );
+              setState(() {});
+            },
+            onLongPress: () {
+              _box!.deleteAt(index);
+              setState(() {});
+            },
           ),
         );
       },
@@ -165,7 +176,7 @@ class _HomePageState extends State<HomePage> {
   void _displayTaskPopup() {
     showDialog(
       context: context,
-      builder: (BuildContext _context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(255, 28, 28, 28),
           title: const Text(
